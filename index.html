@@ -13,11 +13,14 @@
             const loginModal = document.getElementById('loginModal');
             const closeModal = document.getElementById('closeModal');
             const logoutButton = document.getElementById('logoutButton');
+            const adminSection = document.getElementById('adminSection');
+            const productForm = document.getElementById('productForm');
 
             const adminUser = 'admin';
             const adminPass = 'password';
 
             let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            let products = [];
 
             const toggleLoginView = () => {
                 if (isLoggedIn) {
@@ -45,6 +48,7 @@
                     alert('Login berhasil!');
                     closeLoginModal();
                     logoutButton.classList.remove('hidden');
+                    adminSection.classList.remove('hidden');
                 } else {
                     alert('Username atau password salah!');
                 }
@@ -55,26 +59,37 @@
                 isLoggedIn = false;
                 alert('Anda telah logout.');
                 logoutButton.classList.add('hidden');
+                adminSection.classList.add('hidden');
+            });
+
+            productForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('productName').value;
+                const image = document.getElementById('productImage').value;
+                const link = document.getElementById('productLink').value;
+                const price = document.getElementById('productPrice').value;
+                const description = document.getElementById('productDescription').value;
+
+                const newProduct = { name, image, link, price, description };
+                products.push(newProduct);
+                loadProducts();
+                productForm.reset();
             });
 
             const loadProducts = () => {
-                const products = [
-                    { name: 'Produk 1', price: '100000', link: 'https://example.com/1', image: 'https://via.placeholder.com/150' },
-                    { name: 'Produk 2', price: '200000', link: 'https://example.com/2', image: 'https://via.placeholder.com/150' },
-                    { name: 'Produk 3', price: '300000', link: 'https://example.com/3', image: 'https://via.placeholder.com/150' }
-                ];
-
                 productList.innerHTML = products.map(product => `
                     <a href="${product.link}" target="_blank" class="shadow-lg p-4 bg-white rounded-xl mb-4 hover:shadow-2xl transition">
                         <img src="${product.image}" alt="${product.name}" class="w-full h-40 object-cover rounded-md">
                         <h2 class="text-2xl font-semibold mt-2">${product.name}</h2>
                         <p class="text-gray-700">Rp${product.price}</p>
+                        <p class="text-gray-500 mt-2">${product.description}</p>
                     </a>
                 `).join('');
             };
 
             if (isLoggedIn) {
                 logoutButton.classList.remove('hidden');
+                adminSection.classList.remove('hidden');
             }
 
             loadProducts();
@@ -104,6 +119,18 @@
             </form>
             <button id="closeModal" class="mt-4 w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded">Batal</button>
         </div>
+    </div>
+
+    <div id="adminSection" class="hidden bg-white p-6 rounded-lg shadow-lg mt-6">
+        <h2 class="text-2xl font-semibold mb-4">Input Produk</h2>
+        <form id="productForm">
+            <input type="text" id="productName" placeholder="Nama Produk" class="w-full mb-3 p-2 border rounded" required>
+            <input type="text" id="productImage" placeholder="Link Gambar" class="w-full mb-3 p-2 border rounded" required>
+            <input type="text" id="productLink" placeholder="Link Produk" class="w-full mb-3 p-2 border rounded" required>
+            <input type="number" id="productPrice" placeholder="Harga" class="w-full mb-3 p-2 border rounded" required>
+            <textarea id="productDescription" placeholder="Keterangan" class="w-full mb-3 p-2 border rounded"></textarea>
+            <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded">Tambah Produk</button>
+        </form>
     </div>
 </body>
 </html>
