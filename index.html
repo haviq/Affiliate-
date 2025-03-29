@@ -10,24 +10,15 @@
             const loginForm = document.getElementById('loginForm');
             const productList = document.getElementById('productList');
 
-            // Dummy admin credentials
             const adminUser = 'admin';
             const adminPass = 'password';
-
-            // Check login status
             let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
-            const toggleLoginView = () => {
-                if (isLoggedIn) {
-                    document.getElementById('loginSection').style.display = 'none';
-                    document.getElementById('productSection').style.display = 'block';
-                } else {
-                    document.getElementById('loginSection').style.display = 'block';
-                    document.getElementById('productSection').style.display = 'none';
-                }
+            const toggleView = () => {
+                document.getElementById('loginSection').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('productSection').style.display = isLoggedIn ? 'block' : 'none';
             };
 
-            // Login form submit
             loginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const username = document.getElementById('username').value;
@@ -36,39 +27,39 @@
                 if (username === adminUser && password === adminPass) {
                     localStorage.setItem('isLoggedIn', 'true');
                     isLoggedIn = true;
-                    toggleLoginView();
+                    toggleView();
                 } else {
                     alert('Username atau password salah!');
                 }
             });
 
-            // Load products
             const loadProducts = () => {
                 const products = [
-                    { name: 'Produk 1', price: '100000', link: 'https://example.com/product1', image: 'https://via.placeholder.com/150' },
-                    { name: 'Produk 2', price: '200000', link: 'https://example.com/product2', image: 'https://via.placeholder.com/150' }
+                    { name: 'Produk 1', price: '100000', link: 'https://example.com/1', image: 'https://via.placeholder.com/150' },
+                    { name: 'Produk 2', price: '200000', link: 'https://example.com/2', image: 'https://via.placeholder.com/150' },
+                    { name: 'Produk 3', price: '300000', link: 'https://example.com/3', image: 'https://via.placeholder.com/150' }
                 ];
 
                 productList.innerHTML = products.map(product => `
-                    <a href="${product.link}" target="_blank" class="shadow-2xl p-4 bg-white rounded-2xl mb-4 hover:shadow-lg transition">
+                    <a href="${product.link}" target="_blank" class="shadow-lg p-4 bg-white rounded-xl mb-4 hover:shadow-2xl transition">
                         <img src="${product.image}" alt="${product.name}" class="w-full h-40 object-cover rounded-md">
                         <h2 class="text-2xl font-semibold mt-2">${product.name}</h2>
-                        <p class="text-gray-700">Harga: Rp${product.price}</p>
+                        <p class="text-gray-700">Rp${product.price}</p>
                     </a>
                 `).join('');
             };
 
-            toggleLoginView();
+            toggleView();
             loadProducts();
         });
     </script>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-6">
-    <nav class="bg-gray-800 p-4 text-white mb-6">
+    <nav class="bg-gray-800 p-4 text-white flex justify-between items-center mb-6 rounded-md">
         <h1 class="text-3xl font-bold">Affiliate Produk</h1>
     </nav>
 
-    <div id="loginSection" class="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-2xl">
+    <div id="loginSection" class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
         <h2 class="text-2xl font-semibold mb-4">Login Admin</h2>
         <form id="loginForm">
             <input type="text" id="username" placeholder="Username" class="w-full mb-3 p-2 border rounded" required>
