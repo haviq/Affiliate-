@@ -10,15 +10,28 @@
             const form = document.getElementById('productForm');
             const productList = document.getElementById('productList');
             const adminSection = document.getElementById('adminSection');
+            const toggleAdminBtn = document.getElementById('toggleAdmin');
 
             // Check if admin mode is active
-            const isAdmin = localStorage.getItem('isAdmin') === 'true';
+            let isAdmin = localStorage.getItem('isAdmin') === 'true';
 
             // Toggle admin mode
-            document.getElementById('toggleAdmin').addEventListener('click', () => {
-                localStorage.setItem('isAdmin', isAdmin ? 'false' : 'true');
-                location.reload();
+            toggleAdminBtn.addEventListener('click', () => {
+                isAdmin = !isAdmin;
+                localStorage.setItem('isAdmin', isAdmin);
+                updateAdminView();
             });
+
+            // Update view based on admin mode
+            const updateAdminView = () => {
+                if (isAdmin) {
+                    adminSection.style.display = 'block';
+                    toggleAdminBtn.textContent = 'Switch to User Mode';
+                } else {
+                    adminSection.style.display = 'none';
+                    toggleAdminBtn.textContent = 'Switch to Admin Mode';
+                }
+            };
 
             // Load products from LocalStorage
             const loadProducts = () => {
@@ -52,13 +65,7 @@
                 });
             }
 
-            // Show/Hide Admin Section
-            if (isAdmin) {
-                adminSection.style.display = 'block';
-            } else {
-                adminSection.style.display = 'none';
-            }
-
+            updateAdminView();
             loadProducts();
         });
     </script>
@@ -67,7 +74,7 @@
     <h1 class="text-4xl font-bold text-white text-center mb-8">Affiliate Produk</h1>
 
     <button id="toggleAdmin" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded mb-4">
-        Toggle Admin Mode
+        Switch to Admin Mode
     </button>
 
     <div id="adminSection" style="display:none;">
