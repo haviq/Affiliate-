@@ -9,15 +9,29 @@
         document.addEventListener('DOMContentLoaded', () => {
             const loginForm = document.getElementById('loginForm');
             const productList = document.getElementById('productList');
+            const adminLink = document.getElementById('adminLink');
+            const loginModal = document.getElementById('loginModal');
+            const closeModal = document.getElementById('closeModal');
 
             const adminUser = 'admin';
             const adminPass = 'password';
+
             let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
-            const toggleView = () => {
-                document.getElementById('loginSection').style.display = isLoggedIn ? 'none' : 'block';
-                document.getElementById('productSection').style.display = isLoggedIn ? 'block' : 'none';
+            const toggleLoginView = () => {
+                if (isLoggedIn) {
+                    alert('Anda sudah login sebagai admin.');
+                } else {
+                    loginModal.classList.remove('hidden');
+                }
             };
+
+            const closeLoginModal = () => {
+                loginModal.classList.add('hidden');
+            };
+
+            adminLink.addEventListener('click', toggleLoginView);
+            closeModal.addEventListener('click', closeLoginModal);
 
             loginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -27,7 +41,8 @@
                 if (username === adminUser && password === adminPass) {
                     localStorage.setItem('isLoggedIn', 'true');
                     isLoggedIn = true;
-                    toggleView();
+                    alert('Login berhasil!');
+                    closeLoginModal();
                 } else {
                     alert('Username atau password salah!');
                 }
@@ -49,7 +64,6 @@
                 `).join('');
             };
 
-            toggleView();
             loadProducts();
         });
     </script>
@@ -57,19 +71,23 @@
 <body class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-6">
     <nav class="bg-gray-800 p-4 text-white flex justify-between items-center mb-6 rounded-md">
         <h1 class="text-3xl font-bold">Affiliate Produk</h1>
+        <button id="adminLink" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">Admin</button>
     </nav>
 
-    <div id="loginSection" class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-semibold mb-4">Login Admin</h2>
-        <form id="loginForm">
-            <input type="text" id="username" placeholder="Username" class="w-full mb-3 p-2 border rounded" required>
-            <input type="password" id="password" placeholder="Password" class="w-full mb-3 p-2 border rounded" required>
-            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">Login</button>
-        </form>
+    <div id="productSection" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div id="productList"></div>
     </div>
 
-    <div id="productSection" style="display:none;" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div id="productList"></div>
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h2 class="text-2xl font-semibold mb-4">Login Admin</h2>
+            <form id="loginForm">
+                <input type="text" id="username" placeholder="Username" class="w-full mb-3 p-2 border rounded" required>
+                <input type="password" id="password" placeholder="Password" class="w-full mb-3 p-2 border rounded" required>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">Login</button>
+            </form>
+            <button id="closeModal" class="mt-4 w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded">Batal</button>
+        </div>
     </div>
 </body>
 </html>
