@@ -12,6 +12,7 @@
             const adminLink = document.getElementById('adminLink');
             const loginModal = document.getElementById('loginModal');
             const closeModal = document.getElementById('closeModal');
+            const logoutButton = document.getElementById('logoutButton');
 
             const adminUser = 'admin';
             const adminPass = 'password';
@@ -43,9 +44,17 @@
                     isLoggedIn = true;
                     alert('Login berhasil!');
                     closeLoginModal();
+                    logoutButton.classList.remove('hidden');
                 } else {
                     alert('Username atau password salah!');
                 }
+            });
+
+            logoutButton.addEventListener('click', () => {
+                localStorage.removeItem('isLoggedIn');
+                isLoggedIn = false;
+                alert('Anda telah logout.');
+                logoutButton.classList.add('hidden');
             });
 
             const loadProducts = () => {
@@ -64,6 +73,10 @@
                 `).join('');
             };
 
+            if (isLoggedIn) {
+                logoutButton.classList.remove('hidden');
+            }
+
             loadProducts();
         });
     </script>
@@ -71,7 +84,10 @@
 <body class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-6">
     <nav class="bg-gray-800 p-4 text-white flex justify-between items-center mb-6 rounded-md">
         <h1 class="text-3xl font-bold">Affiliate Produk</h1>
-        <button id="adminLink" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">Admin</button>
+        <div>
+            <button id="adminLink" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">Admin</button>
+            <button id="logoutButton" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded hidden">Logout</button>
+        </div>
     </nav>
 
     <div id="productSection" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
